@@ -10,7 +10,7 @@ namespace ML
     {
        public int IdAutor {  get; set; }
         public string Nombre { get; set; }  
-        public string Apellido { get; set; }
-        public DateTime FechaNacimineto { get; set; }
+        public string ApellidoPaterno { get; set; }
+        public string ApellidoMaterno { get; set; }
     }
 }

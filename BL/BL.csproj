@@ -61,7 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DL\DL.csproj">
-      <Project>{2272ef1d-f6a1-4c39-8f6c-48e6b50f50af}</Project>
+      <Project>{7f6c56a3-4ce2-424a-a418-14a6ee632442}</Project>
       <Name>DL</Name>
     </ProjectReference>
     <ProjectReference Include="..\ML\ML.csproj">

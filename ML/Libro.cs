@@ -6,14 +6,12 @@ using System.Threading.Tasks;
 
 namespace ML
 {
-    public class Libros
+    public class Libro
     {
-        public int IdLibros {  get; set; }
-        public string Nombre {  get; set; }
-        public int AÑoPublicado { get; set; }  
+        public int IdLibro { get; set; }
+        public string Titulo { get; set; } 
         public DateTime FechaDePublicacion { get; set; }
         public ML.Autor Autor { get; set; }
         public ML.Editorial Editorial { get; set; }
-
     }
 }

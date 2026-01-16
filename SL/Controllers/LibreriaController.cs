@@ -13,7 +13,7 @@ namespace SL.Controllers
 
         [HttpPost]
         [Route("Add")]
-        public IHttpActionResult Add([FromBody] ML.Libros libro)
+        public IHttpActionResult Add([FromBody] ML.Libro libro)
         {
             ML.Result result = BL.Libro.Add(libro);
             if (result.Correct)
@@ -26,64 +26,28 @@ namespace SL.Controllers
             }
         }
         [HttpGet]
-        [Route("LibroGetByAutor/{idAutor}")]
-        public IHttpActionResult GetByIdAutor(int idAutor)
+        [Route("LibroGetByBusqueda/")]
+        public IHttpActionResult LibroGetByBuqueda(int opcion, int idAutor = 0, DateTime? fecha = null, int idEditorial = 0, string titulo = "")
         {
-            ML.Result result = BL.Libro.LibroGetByAutor(idAutor);
+            var opciones = new ML.Opciones
+            {
+                opcion = opcion,
+                idAutor = idAutor,
+                FechaDePublicacion = Convert.ToDateTime(fecha),
+                idEditorial = idEditorial,
+                Titulo = titulo
+            };
+
+            var result = BL.Libro.BusquedaLibro(opciones);
+
             if (result.Correct)
-            {
-                return Ok(result);
-            }
+                return Ok(result.Objects);
             else
-            {
-                return Content(HttpStatusCode.BadRequest, result);
-            }
+                return Content(HttpStatusCode.NotFound, result.ErrorMessage);
         }
 
-        [HttpGet]
-        [Route("LibroGetBytitulo/{Titulo}")]
-        public IHttpActionResult GetByTitulo(string Titulo)
-        {
-            ML.Result result = BL.Libro.LibroGetByTitulo(Titulo);
-            if (result.Correct)
-            {
-                return Ok(result);
-            }
-            else
-            {
-                return Content(HttpStatusCode.BadRequest, result);
-            }
-        }
 
-        [HttpGet]
-        [Route("LibroGetByEditorial/{idEditorial}")]
-        public IHttpActionResult GetByIdEdotorial(int idEditorial)
-        {
-            ML.Result result = BL.Libro.LibroGetByEditorial(idEditorial);
-            if (result.Correct)
-            {
-                return Ok(result);
-            }
-            else
-            {
-                return Content(HttpStatusCode.BadRequest, result);
-            }
-        }
 
-        [HttpGet]
-        [Route("LibroGetByAutorAndFecha/{idAutor}")]
-        public IHttpActionResult GetByIdAutor(int idAutor, DateTime fechaDePublicacion)
-        {
-            ML.Result result = BL.Libro.LibroGetByAutorAndFecha(idAutor, fechaDePublicacion);
-            if (result.Correct)
-            {
-                return Ok(result);
-            }
-            else
-            {
-                return Content(HttpStatusCode.BadRequest, result);
-            }
-        }
 
         [HttpDelete]
         [Route("LibrosDeleteAutor/{idAutor}")]

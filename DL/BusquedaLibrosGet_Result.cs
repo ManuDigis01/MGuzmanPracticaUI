@@ -11,12 +11,17 @@ namespace DL
 {
     using System;
     
-    public partial class LibroGetAll_Result
+    public partial class BusquedaLibrosGet_Result
     {
-        public string Nombre { get; set; }
-        public Nullable<int> AñoPublicacion { get; set; }
+        public int IdLibro { get; set; }
+        public string Titulo { get; set; }
         public Nullable<System.DateTime> FechaDePublicacion { get; set; }
-        public Nullable<int> IdAutor { get; set; }
-        public Nullable<int> IdEditorial { get; set; }
+        public int IdAutor { get; set; }
+        public string NombreAutor { get; set; }
+        public string ApellidoPaterno { get; set; }
+        public string ApellidoMaterno { get; set; }
+        public int IdEditorial { get; set; }
+        public string NombreEditorial { get; set; }
+        public string Telefono { get; set; }
     }
 }

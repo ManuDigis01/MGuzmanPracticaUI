@@ -14,12 +14,11 @@ namespace DL
     
     public partial class Libro
     {
-        public int IdLibros { get; set; }
-        public string Nombre { get; set; }
-        public Nullable<int> AñoPublicacion { get; set; }
+        public int IdLibro { get; set; }
+        public string Titulo { get; set; }
+        public Nullable<System.DateTime> FechaDePublicacion { get; set; }
         public Nullable<int> IdAutor { get; set; }
         public Nullable<int> IdEditorial { get; set; }
-        public Nullable<System.DateTime> FechaDePublicacion { get; set; }
     
         public virtual Autor Autor { get; set; }
         public virtual Editorial Editorial { get; set; }

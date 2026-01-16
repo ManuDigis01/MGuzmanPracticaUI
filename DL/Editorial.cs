@@ -17,7 +17,7 @@ namespace DL
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Editorial()
         {
-            this.Libros = new HashSet<Libro>();
+            this.Libroes = new HashSet<Libro>();
         }
     
         public int IdEditorial { get; set; }
@@ -25,6 +25,6 @@ namespace DL
         public string Telefono { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Libro> Libros { get; set; }
+        public virtual ICollection<Libro> Libroes { get; set; }
     }
 }

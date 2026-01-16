@@ -17,15 +17,15 @@ namespace DL
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Autor()
         {
-            this.Libros = new HashSet<Libro>();
+            this.Libroes = new HashSet<Libro>();
         }
     
         public int IdAutor { get; set; }
+        public string ApellidoPaterno { get; set; }
+        public string ApellidoMaterno { get; set; }
         public string Nombre { get; set; }
-        public string Apellido { get; set; }
-        public Nullable<System.DateTime> FechaNacimiento { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Libro> Libros { get; set; }
+        public virtual ICollection<Libro> Libroes { get; set; }
     }
 }
