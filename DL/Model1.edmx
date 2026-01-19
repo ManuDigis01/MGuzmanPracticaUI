@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="LibreriaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="LibreriaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Autor">
           <Key>
             <PropertyRef Name="IdAutor" />
@@ -56,12 +56,17 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="AutorGetAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="BusquedaLibrosGet" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="opcion" Type="int" Mode="In" />
           <Parameter Name="idAutor" Type="int" Mode="In" />
           <Parameter Name="FechaDePublicacion" Type="date" Mode="In" />
           <Parameter Name="idEditorial" Type="int" Mode="In" />
           <Parameter Name="Titulo" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="GetAllLibros" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Titulo" Type="varchar" Mode="In" />
+          <Parameter Name="IdAutor" Type="int" Mode="In" />
         </Function>
         <Function Name="LibroAdd" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Titulo" Type="varchar" Mode="In" />
@@ -74,6 +79,9 @@
         </Function>
         <Function Name="LibroDeleteEditorial" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="IdEditorial" Type="int" Mode="In" />
+        </Function>
+        <Function Name="LibroGetById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdLibro" Type="int" Mode="In" />
         </Function>
         <EntityContainer Name="LibreriaModelStoreContainer">
           <EntitySet Name="Autor" EntityType="Self.Autor" Schema="dbo" store:Type="Tables" />
@@ -88,8 +96,7 @@
             <End Role="Libro" EntitySet="Libro" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="LibreriaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -174,13 +181,50 @@
             <Parameter Name="IdEditorial" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="LibroDeleteAutor">
-            <Parameter Name="IdAutor" Mode="In" Type="Int32" />
+          <Parameter Name="IdAutor" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="LibroDeleteEditorial">
-            <Parameter Name="IdEditorial" Mode="In" Type="Int32" />
+          <Parameter Name="IdEditorial" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetAllLibros" ReturnType="Collection(LibreriaModel.GetAllLibros_Result)" >
+            <Parameter Name="Titulo" Mode="In" Type="String" />
+            <Parameter Name="IdAutor" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="AutorGetAll" ReturnType="Collection(LibreriaModel.AutorGetAll_Result)" />
+          <FunctionImport Name="LibroGetById" ReturnType="Collection(LibreriaModel.LibroGetById_Result)">
+            <Parameter Name="IdLibro" Mode="In" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="BusquedaLibrosGet_Result">
+          <Property Type="Int32" Name="IdLibro" Nullable="false" />
+          <Property Type="String" Name="Titulo" Nullable="false" MaxLength="250" />
+          <Property Type="DateTime" Name="FechaDePublicacion" Nullable="true" />
+          <Property Type="Int32" Name="IdAutor" Nullable="false" />
+          <Property Type="String" Name="NombreAutor" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="ApellidoPaterno" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="ApellidoMaterno" Nullable="true" MaxLength="20" />
+          <Property Type="Int32" Name="IdEditorial" Nullable="false" />
+          <Property Type="String" Name="NombreEditorial" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Telefono" Nullable="true" MaxLength="20" />
+        </ComplexType>
+        <ComplexType Name="GetAllLibros_Result">
+          <Property Type="Int32" Name="IdLibro" Nullable="false" />
+          <Property Type="String" Name="Titulo" Nullable="false" MaxLength="250" />
+          <Property Type="DateTime" Name="FechaDePublicacion" Nullable="true" />
+          <Property Type="Int32" Name="IdAutor" Nullable="false" />
+          <Property Type="String" Name="NombreAutor" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="ApellidoPaterno" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="ApellidoMaterno" Nullable="true" MaxLength="20" />
+          <Property Type="Int32" Name="IdEditorial" Nullable="false" />
+          <Property Type="String" Name="NombreEditorial" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Telefono" Nullable="true" MaxLength="20" />
+        </ComplexType>
+        <ComplexType Name="AutorGetAll_Result">
+          <Property Type="String" Name="Nombre" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="ApellidoPaterno" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="ApellidoMaterno" Nullable="true" MaxLength="20" />
+        </ComplexType>
+        <ComplexType Name="LibroGetById_Result">
           <Property Type="Int32" Name="IdLibro" Nullable="false" />
           <Property Type="String" Name="Titulo" Nullable="false" MaxLength="250" />
           <Property Type="DateTime" Name="FechaDePublicacion" Nullable="true" />
@@ -247,6 +291,47 @@
           <FunctionImportMapping FunctionImportName="LibroAdd" FunctionName="LibreriaModel.Store.LibroAdd" />
           <FunctionImportMapping FunctionImportName="LibroDeleteAutor" FunctionName="LibreriaModel.Store.LibroDeleteAutor" />
           <FunctionImportMapping FunctionImportName="LibroDeleteEditorial" FunctionName="LibreriaModel.Store.LibroDeleteEditorial" />
+          <FunctionImportMapping FunctionImportName="GetAllLibros" FunctionName="LibreriaModel.Store.GetAllLibros">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibreriaModel.GetAllLibros_Result">
+                <ScalarProperty Name="IdLibro" ColumnName="IdLibro" />
+                <ScalarProperty Name="Titulo" ColumnName="Titulo" />
+                <ScalarProperty Name="FechaDePublicacion" ColumnName="FechaDePublicacion" />
+                <ScalarProperty Name="IdAutor" ColumnName="IdAutor" />
+                <ScalarProperty Name="NombreAutor" ColumnName="NombreAutor" />
+                <ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
+                <ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
+                <ScalarProperty Name="IdEditorial" ColumnName="IdEditorial" />
+                <ScalarProperty Name="NombreEditorial" ColumnName="NombreEditorial" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="AutorGetAll" FunctionName="LibreriaModel.Store.AutorGetAll">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibreriaModel.AutorGetAll_Result">
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
+                <ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="LibroGetById" FunctionName="LibreriaModel.Store.LibroGetById">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibreriaModel.LibroGetById_Result">
+                <ScalarProperty Name="IdLibro" ColumnName="IdLibro" />
+                <ScalarProperty Name="Titulo" ColumnName="Titulo" />
+                <ScalarProperty Name="FechaDePublicacion" ColumnName="FechaDePublicacion" />
+                <ScalarProperty Name="IdAutor" ColumnName="IdAutor" />
+                <ScalarProperty Name="NombreAutor" ColumnName="NombreAutor" />
+                <ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
+                <ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
+                <ScalarProperty Name="IdEditorial" ColumnName="IdEditorial" />
+                <ScalarProperty Name="NombreEditorial" ColumnName="NombreEditorial" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

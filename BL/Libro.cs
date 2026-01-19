@@ -1,4 +1,5 @@
-﻿using ML;
+﻿using Microsoft.Win32;
+using ML;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,13 +9,13 @@ using System.Threading.Tasks;
 namespace BL
 {
     public class Libro
-    { 
-
-    public static ML.Result Add(ML.Libro libro)
     {
-        ML.Result result = new ML.Result();
-        try
+
+        public static ML.Result Add(ML.Libro libro)
         {
+            ML.Result result = new ML.Result();
+            try
+            {
                 using (DL.LibreriaEntities context = new DL.LibreriaEntities())
                 {
                     var registros = context.LibroAdd(
@@ -23,7 +24,7 @@ namespace BL
                         libro.Autor.IdAutor,
                         libro.Editorial.IdEditorial
                         );
-                    if(registros > 0)
+                    if (registros > 0)
                     {
                         result.Correct = true;
                     }
@@ -35,16 +36,16 @@ namespace BL
 
                 }
 
-        }
-        catch (Exception ex)
-        {
+            }
+            catch (Exception ex)
+            {
                 result.Correct = false;
                 result.ErrorMessage = ex.Message;
                 result.Ex = ex;
             }
             return result;
 
-    }
+        }
 
         public static ML.Result BusquedaLibro(ML.Opciones opcion)
         {
@@ -55,48 +56,48 @@ namespace BL
                 {
                     var registros = context.BusquedaLibrosGet(opcion.opcion,
                         opcion.idAutor,
-                        opcion.FechaDePublicacion ,
+                        opcion.FechaDePublicacion,
                         opcion.idEditorial,
                         opcion.Titulo).ToList();
 
-                    
-                        if (registros.Count > 0)
+
+                    if (registros.Count > 0)
+                    {
+                        result.Objects = new List<object>();
+
+                        foreach (var registro in registros)
                         {
-                            result.Objects = new List<object>();
+                            ML.Libro libro = new ML.Libro();
+                            libro.Autor = new ML.Autor();
+                            libro.Editorial = new ML.Editorial();
 
-                            foreach (var registro in registros)
-                            {
-                                ML.Libro libro = new ML.Libro();
-                                libro.Autor = new ML.Autor();
-                                libro.Editorial = new ML.Editorial();
+                            libro.IdLibro = Convert.ToInt32(registro.IdLibro);
+                            libro.Titulo = registro.Titulo;
+                            libro.FechaDePublicacion = Convert.ToDateTime(registro.FechaDePublicacion);
 
-                                libro.IdLibro = Convert.ToInt32(registro.IdLibro);
-                                libro.Titulo = registro.Titulo;
-                                libro.FechaDePublicacion = Convert.ToDateTime(registro.FechaDePublicacion);
+                            libro.Autor.IdAutor = Convert.ToInt32(registro.IdAutor);
+                            libro.Autor.Nombre = registro.NombreAutor;
+                            libro.Autor.ApellidoPaterno = registro.ApellidoPaterno;
+                            libro.Autor.ApellidoMaterno = registro.ApellidoMaterno;
 
-                                libro.Autor.IdAutor = Convert.ToInt32(registro.IdAutor);
-                                libro.Autor.Nombre = registro.NombreAutor;
-                                libro.Autor.ApellidoPaterno = registro.ApellidoPaterno;
-                                libro.Autor.ApellidoMaterno = registro.ApellidoMaterno;
+                            libro.Editorial.IdEditorial = Convert.ToInt32(registro.IdEditorial);
+                            libro.Editorial.Nombre = registro.NombreEditorial;
+                            libro.Editorial.Telefono = registro.Telefono;
 
-                                libro.Editorial.IdEditorial = Convert.ToInt32(registro.IdEditorial);
-                                libro.Editorial.Nombre = registro.NombreEditorial;
-                                libro.Editorial.Telefono = registro.Telefono;
-
-                                result.Objects.Add(libro);
-                            }
-
-                            result.Correct = true;
+                            result.Objects.Add(libro);
                         }
 
-                        else
-                        {
-                            result.Correct = false;
-                            result.ErrorMessage = "No se encontró el Libro";
-                        }
-                    
+                        result.Correct = true;
+                    }
 
-                   
+                    else
+                    {
+                        result.Correct = false;
+                        result.ErrorMessage = "No se encontró el Libro";
+                    }
+
+
+
                 }
             }
             catch (Exception ex)
@@ -109,7 +110,6 @@ namespace BL
             return result;
         }
 
-       
         public static ML.Result LibrosDeleteAutor(int idAutor)
         {
             ML.Result result = new ML.Result();
@@ -179,5 +179,116 @@ namespace BL
         }
 
 
+
+
+        public static ML.Result GetAll(int IdAutor,string titulo)
+        {
+            ML.Result result = new ML.Result();
+            try
+            {
+                using (DL.LibreriaEntities context = new DL.LibreriaEntities())
+                {
+                    if (IdAutor == 0 && titulo == "")
+
+                    {
+                        var registros = context.GetAllLibros(titulo,IdAutor).ToList();
+
+                        if (registros.Count > 0)
+                        {
+                            result.Objects = new List<object>();
+                            foreach (var registro in registros)
+                            {
+                                ML.Libro libro = new ML.Libro();
+                                libro.Autor = new Autor();
+                                libro.Editorial = new Editorial();
+
+                                libro.IdLibro = registro.IdLibro;
+                                libro.Titulo = registro.Titulo;
+                                libro.FechaDePublicacion = Convert.ToDateTime(registro.FechaDePublicacion);
+
+                                libro.Autor.IdAutor = Convert.ToInt32(registro.IdAutor);
+                                libro.Autor.Nombre = registro.NombreAutor;
+                                libro.Autor.ApellidoPaterno = registro.ApellidoPaterno;
+                                libro.Autor.ApellidoMaterno = registro.ApellidoMaterno;
+
+                                libro.Editorial.IdEditorial = Convert.ToInt32(registro.IdEditorial);
+                                libro.Editorial.Nombre = registro.NombreEditorial;
+                                libro.Editorial.Telefono = registro.Telefono;
+
+                                result.Objects.Add(libro);
+
+                            }
+                            result.Correct = true;
+                        }
+                        else
+                        {
+                            result.Correct = false;
+                            result.ErrorMessage = "no hay registros";
+                        }
+                    }
+                }
+
+            }catch(Exception ex) { 
+            result.Correct = false;
+            result.ErrorMessage = ex.Message;
+            result.Ex = ex;
+            
+            }
+            return result;
+        }
+
+        public static ML.Result GetById(int idlibro)
+        {
+            ML.Result result = new ML.Result();
+            try
+            {
+                using (DL.LibreriaEntities context = new DL.LibreriaEntities())
+                {
+                    var registro = context.LibroGetById(idlibro).SingleOrDefault();
+
+                    if (registro != null)
+                    {
+
+                       
+                            ML.Libro libro = new ML.Libro();
+                            libro.Autor = new ML.Autor();
+                            libro.Editorial = new ML.Editorial();
+
+                            libro.IdLibro = Convert.ToInt32(registro.IdLibro);
+                            libro.Titulo = registro.Titulo;
+                            libro.FechaDePublicacion = Convert.ToDateTime(registro.FechaDePublicacion);
+
+                            libro.Autor.IdAutor = Convert.ToInt32(registro.IdAutor);
+                            libro.Autor.Nombre = registro.NombreAutor;
+                            libro.Autor.ApellidoPaterno = registro.ApellidoPaterno;
+                            libro.Autor.ApellidoMaterno = registro.ApellidoMaterno;
+
+                            libro.Editorial.IdEditorial = Convert.ToInt32(registro.IdEditorial);
+                            libro.Editorial.Nombre = registro.NombreEditorial;
+                            libro.Editorial.Telefono = registro.Telefono;
+
+                            result.Object = libro;
+                        result.Correct = true;
+
+
+                    }
+                    else
+                    {
+                        result.Correct = false;
+                        result.ErrorMessage = "No se encontro libro ";
+                    }
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                result.Correct = false;
+                result.ErrorMessage = ex.Message;
+                result.Ex = ex;
+            }
+            return result;
+        }
     }
 }

@@ -94,5 +94,32 @@ namespace DL
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("LibroDeleteEditorial", idEditorialParameter);
         }
+    
+        public virtual ObjectResult<GetAllLibros_Result> GetAllLibros(string titulo, Nullable<int> idAutor)
+        {
+            var tituloParameter = titulo != null ?
+                new ObjectParameter("Titulo", titulo) :
+                new ObjectParameter("Titulo", typeof(string));
+    
+            var idAutorParameter = idAutor.HasValue ?
+                new ObjectParameter("IdAutor", idAutor) :
+                new ObjectParameter("IdAutor", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllLibros_Result>("GetAllLibros", tituloParameter, idAutorParameter);
+        }
+    
+        public virtual ObjectResult<AutorGetAll_Result> AutorGetAll()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<AutorGetAll_Result>("AutorGetAll");
+        }
+    
+        public virtual ObjectResult<LibroGetById_Result> LibroGetById(Nullable<int> idLibro)
+        {
+            var idLibroParameter = idLibro.HasValue ?
+                new ObjectParameter("IdLibro", idLibro) :
+                new ObjectParameter("IdLibro", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<LibroGetById_Result>("LibroGetById", idLibroParameter);
+        }
     }
 }

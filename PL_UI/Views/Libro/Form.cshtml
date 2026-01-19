@@ -1,0 +1,475 @@
+﻿@model ML.Libro
+@{
+    ViewBag.Title = "Form";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<div style="display: flex; justify-content: center;">
+    <h2>Informacion Libro</h2>
+</div>
+
+
+
+
+@using (Html.BeginForm("Form", "Libro", FormMethod.Post, new { @enctype = "multipart/form-data", @class = "container" }))
+
+{
+
+
+    @Html.HiddenFor(model => model.IdLibro)
+
+
+<div class="p-3 mb-2 border border-secondary text-black">
+    <div class="row">
+        <div class="col-5">
+            @*//todo el formulario label*@
+            @Html.LabelFor(modelo => modelo.Titulo, new { @class = " form-label" })
+            @*//Input*@
+            @Html.TextBoxFor(modelo => modelo.Titulo, new { @class = " form-control", @style = "border-width: 3px;" })
+
+            @*//todo el formulario label*@
+            @Html.LabelFor(modelo => modelo.FechaDePublicacion, "Fecha de Publicacion", new { @class = "form-label" })
+            @*//Input*@
+            @Html.TextBoxFor(model => model.FechaDePublicacion, new { @type = "date", @class = "form-control", @Value = Model.FechaDePublicacion.ToString("yyyy-MM-dd"), @onkeypress = "validarFecha(this)", @style = "border-width: 3px;" })
+        </div>
+    </div>
+
+    <div class="col-4">
+        @Html.LabelFor(modelo => modelo.Autor.Nombre, new { @class = "form-label" })
+        @Html.TextBoxFor(modelo => modelo.Autor.Nombre, new { @class = "form-control", @style = "border-width: 3px;" })
+        <span></span>
+    </div>
+    <div class="col-4">
+        @Html.LabelFor(modelo => modelo.Autor.ApellidoPaterno, "Apellido Paterno", new { @class = "form-label" })
+        @*//Input*@
+        @Html.TextBoxFor(modelo => modelo.Autor.ApellidoPaterno, new { @class = "form-control", @style = "border-width: 3px;" })
+    </div>
+    <div class="col-4">
+        @*//todo el formulario label*@
+        @Html.LabelFor(modelo => modelo.Autor.ApellidoMaterno, "Apellido Materno", new { @class = "form-label" })
+        @*//Input*@
+        @Html.TextBoxFor(modelo => modelo.Autor.ApellidoMaterno, new { @class = "form-control", @style = "border-width: 3px;" })
+    </div>
+
+
+
+
+
+
+
+    <div class="row">
+
+        <div class="col-6">
+            @Html.LabelFor(modelo => modelo.Autor.IdAutor, new { @class = "form-label" })
+            @*//Input*@
+            @Html.TextBoxFor(modelo => modelo.Autor.IdAutor, new { @class = "form-control", @style = "border-width: 3px;" })
+        </div>
+        <div class="col-6">
+            @Html.LabelFor(modelo => modelo.Autor.Nombre, "Nombre Autor", new { @class = "form-label" })
+            @*//Input*@
+            @Html.TextBoxFor(modelo => modelo.Autor.Nombre, new { @class = "form-control", @style = "border-width: 3px;" })
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-6">
+            @Html.LabelFor(modelo => modelo.Editorial.IdEditorial, new { @class = "form-label" })
+            @*//Input*@
+            @Html.TextBoxFor(modelo => modelo.Editorial.IdEditorial, new { @class = "form-control", @style = "border-width: 3px;" })
+        </div>
+        <div class="col-6">
+            @*//todo el formulario label*@
+            @Html.LabelFor(modelo => modelo.Editorial.Nombre, "Nombre Editorial", new { @class = "form-label" })
+            @*//Input*@
+            @Html.TextBoxFor(modelo => modelo.Editorial.Nombre, new { @class = "form-control ", @style = "border-width: 3px;" })
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+}
+
+
+@Scripts.Render("~/bundles/jquery")
+
+
+<script>
+
+    //---------------------------------------------------------------------------------------
+    function SoloLetras(input) {
+        var str = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+        var regex = new RegExp(/[A-zÁ-ú\s]+$/);
+
+        if (regex.test(str)) {
+
+            $(input).removeClass("is-invalid")
+            $(input).addClass("is-valid")
+
+            let padre = $(input).closest('div');
+            let span = $(padre).find('span')
+
+            let mensaje = $(padre).find('div')
+
+            if (mensaje.length == 0) {
+                let mensajeBien = "<div class='valid-feedback'>Looks good!</div>"
+                padre.append(mensajeBien)
+
+            } else {
+
+                // ← AGREGADO: elimina mensajes previos
+                padre.find('.invalid-feedback').remove();
+
+
+            }
+
+            return true;
+        }
+        else {
+
+            $(input).removeClass("is-valid")
+            $(input).addClass("is-invalid")
+
+            let padre = $(input).closest('div');
+            let span = $(padre).find('span')
+
+            let mensaje = $(padre).find('div')
+
+            if (mensaje.length == 0) {
+
+                let mensajeMal = "<div class='invalid-feedback'>No valido. </div> "
+                padre.append(mensajeMal)
+            } else {
+                padre.find('.valid-feedback').remove();
+            }
+
+            event.preventDefault();
+            return false;
+        }
+
+    }
+
+    function ValidarPegado(input) {
+        var textoPegado = (event.clipboardData || window.clipboardData).getData('text');
+        var regex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]*$/;
+
+        if (!regex.test(textoPegado)) {
+            event.preventDefault(); // bloquea el pegado
+        }
+    }
+
+    function validarEmail(input) {
+
+        let campo = input;
+        let padre = $(input).closest('div');
+
+
+        let emailRegex = /^[a-zA-Z0-9._%+-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+        // Limpieza de mensajes previos
+        padre.find(".valid-feedback, .invalid-feedback").remove();
+
+        if (emailRegex.test(campo.value)) {
+
+            $(input).removeClass("is-invalid");
+            $(input).addClass("is-valid");
+            let EmailBueno = "<div class='valid-feedback'>Looks good!</div>";
+            padre.append(EmailBueno);
+
+            return true;
+
+        } else {
+
+            $(input).removeClass("is-valid");
+            $(input).addClass("is-invalid");
+
+            let EmailMal = "<div class='invalid-feedback'>El email no es válido.</div>";
+            padre.append(EmailMal);
+
+            return false;
+        }
+
+
+    }
+
+    // Mostrar campo confirmar contraseña
+    function mostrarConfirmPassword(input) {
+        const password = input.value;
+        if (password.length > 0) {
+            $('#confirm-container').slideDown();
+        } else {
+            $('#confirm-container').slideUp();
+            $('#confirm-password').val('');
+            $('#confirm-password').removeClass('is-valid is-invalid');
+            $('#confirm-container .invalid-feedback').hide();
+        }
+    }
+
+    // Validación de contraseña (igual que antes)
+    function validarPassword(input) {
+        const password = input.value;
+        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@@!%*?&])[A-Za-z\d$@@!%*?&]{8,15}$/;
+
+        let padre = $(input).closest('div');
+        padre.find(".valid-feedback, .invalid-feedback").remove();
+
+        if (regex.test(password)) {
+            $(input).removeClass("is-invalid").addClass("is-valid");
+            padre.append("<div class='valid-feedback'>Contraseña válida.</div>");
+            return true;
+        } else {
+            $(input).removeClass("is-valid").addClass("is-invalid");
+            padre.append("<div class='invalid-feedback'>La contraseña debe tener 8-15 caracteres, al menos una mayúscula, una minúscula, un número y un carácter especial ($@@!%*?&).</div>");
+            return false;
+        }
+    }
+
+    // Validación confirm password en tiempo real
+    $('#confirm-password').on('input', function () {
+        const confirmPassword = $(this).val();
+        const password = $('#Password').val(); // nombre generado por HtmlHelper
+
+        if (confirmPassword !== password) {
+            $(this).addClass('is-invalid').removeClass('is-valid');
+            $(this).siblings('.invalid-feedback').show();
+        } else {
+            $(this).removeClass('is-invalid').addClass('is-valid');
+            $(this).siblings('.invalid-feedback').hide();
+        }
+    });
+
+    // Validación final al enviar
+    $('#submit').on('click', function () {
+        const passwordValida = validarPassword($('#Password')[0]);
+        const confirmCoincide = $('#confirm-password').val() === $('#Password').val();
+
+        if (passwordValida && confirmCoincide) {
+            alert('Formulario enviado correctamente!');
+        } else {
+            alert('Revisa los campos de contraseña.');
+        }
+    });
+
+
+
+    function validarFecha(input) {
+
+        const valor = input.value;
+
+        // Tu expresión regular
+        const regex = /^(\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
+
+        // Remover mensajes previos
+        let padre = $(input).closest("div");
+        padre.find(".valid-feedback, .invalid-feedback").remove();
+
+        if (regex.test(valor)) {
+
+            $(input).removeClass("is-invalid").addClass("is-valid");
+            padre.append("<div class='valid-feedback'>Fecha válida.</div>");
+            return true;
+
+        } else {
+
+            $(input).removeClass("is-valid").addClass("is-invalid");
+            padre.append("<div class='invalid-feedback'>Fecha invalida.</div>");
+            return false;
+        }
+    }
+
+    function phonenumber(input) {
+
+
+        const phoneno = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+
+        let padre = $(input).closest("div");
+        padre.find(".valid-feedback, .invalid-feedback").remove();
+
+        if (phoneno.test(input.value)) {
+
+            $(input).removeClass("is-invalid").addClass("is-valid");
+            padre.append("<div class='valid-feedback'>Número válido.</div>");
+            return true;
+
+        } else {
+
+            $(input).removeClass("is-valid").addClass("is-invalid");
+            padre.append("<div class='invalid-feedback'>Número inválido.</div>");
+            return false;
+        }
+    }
+
+    function validarCURP(input) {
+
+
+        input.value = input.value.toUpperCase();
+
+
+
+        const regex = /^([A-Z][AEIOUX][A-Z]{2}\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])[HM](?:AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[B-DF-HJ-NP-TV-Z]{3}[A-Z\d])(\d)$/;
+
+        let padre = $(input).closest("div");
+        padre.find(".valid-feedback, .invalid-feedback").remove();
+
+        if (regex.test(input.value)) {
+            $(input).removeClass("is-invalid").addClass("is-valid");
+            padre.append("<div class='valid-feedback'>CURP válida.</div>");
+            return true;
+        } else {
+            $(input).removeClass("is-valid").addClass("is-invalid");
+            padre.append("<div class='invalid-feedback'>CURP inválida.</div>");
+            return false;
+        }
+    }
+
+    function validarAlfanumerico(input) {
+
+
+
+
+        const regex = /^[A-Za-z0-9\s]+$/;
+
+
+        let padre = $(input).closest('div');
+        padre.find('.invalid-feedback, .valid-feedback').remove();
+
+
+        if (regex.test(input.value) || input.value === "") { // Permitimos campo vacío
+            $(input).removeClass("is-invalid").addClass("is-valid");
+
+
+            padre.append("<div class='valid-feedback'>Looks good!</div>");
+            return true;
+        } else {
+            $(input).removeClass("is-valid").addClass("is-invalid");
+
+
+            padre.append("<div class='invalid-feedback'>No válido. Solo letras, números y espacios.</div>");
+
+
+            event.preventDefault();
+            return false;
+        }
+    }
+
+
+
+
+    function validaFormulario() {
+        let inputs = $('input');
+
+        $.each(inputs, function (index, value) {
+
+
+            if ($(value).hasClass('is-invalid') || $(value).val() == '') {
+                if ($("#ApellidoMaterno") || $("#Celular") || $("#CURP") || $("#imagenAuto")) {
+                    return true;
+                } else {
+                    event.preventDefault();
+                    alert("Aun tienes errores")
+                    return false;
+                }
+
+
+            }
+        })
+
+    }
+
+    function soloNumeros(input) {
+        const regex = /^[0-9]+$/;
+        let padre = $(input).closest('div');
+
+        // Borrar mensajes previos (importante)
+        padre.find('.invalid-feedback, .valid-feedback').remove();
+
+        // Validar tecla presionada
+        if (!/^[0-9]$/.test(event.key)) {
+            event.preventDefault();
+
+            $(input).removeClass("is-valid").addClass("is-invalid");
+
+            padre.append("<div class='invalid-feedback'>no valido</div>");
+            return false;
+        }
+
+        // Si es válido
+        $(input).removeClass("is-invalid").addClass("is-valid");
+
+        padre.append("<div class='valid-feedback'>Valido!</div>");
+        return true;
+    }
+
+    function validarSexo() {
+        const opciones = $(".sexoOption");
+        const padre = $("#sexoGroup");
+
+        padre.find(".valid-feedback, .invalid-feedback").remove();
+        opciones.removeClass("is-valid is-invalid");
+
+        if (!opciones.is(":checked")) {
+            opciones.addClass("is-invalid");
+            padre.append("<div class='invalid-feedback d-block'>Debe seleccionar una opción.</div>");
+            return false;
+        }
+
+        opciones.addClass("is-valid");
+        padre.append("<div class='valid-feedback d-block'>¡Correcto!</div>");
+        return true;
+    }
+
+
+
+
+    function validarDropdown(input) {
+        const padre = $(input).parent();
+        const valor = $(input).val();
+
+        // Limpiar mensajes anteriores
+        padre.find(".invalid-feedback, .valid-feedback").remove();
+
+        // Si el valor es vacío o el placeholder
+        if (valor === "" || valor === "Selecciona El Rol") {
+            $(input).removeClass("is-valid").addClass("is-invalid");
+            padre.append("<div class='invalid-feedback'>Debe seleccionar un rol</div>");
+            return false;
+        }
+
+        // Si es válido
+        $(input).removeClass("is-invalid").addClass("is-valid");
+        padre.append("<div class='valid-feedback'>Correcto</div>");
+        return true;
+    }
+
+    function validarDropdownDireccion(input) {
+        const padre = $(input).parent();
+        const valor = $(input).val();
+
+        // Eliminar mensajes previos para evitar duplicados
+        padre.find(".invalid-feedback, .valid-feedback").remove();
+
+        // Si no seleccionó nada o seleccionó el placeholder
+        if (!valor || valor === "" || valor === "Selecciona la Estado" || valor === "Seleciona el Municipio" || valor === "Seleciona la Colonia") {
+            $(input).removeClass("is-valid").addClass("is-invalid");
+            padre.append("<div class='invalid-feedback'>Debe seleccionar una opción</div>");
+            return false;
+        }
+
+        // Si es válido
+        $(input).removeClass("is-invalid").addClass("is-valid");
+        padre.append("<div class='valid-feedback'>Correcto</div>");
+        return true;
+    }
+
+
+
+</script>

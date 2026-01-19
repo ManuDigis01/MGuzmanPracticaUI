@@ -1,0 +1,55 @@
+﻿@model ML.Libro
+@{
+    ViewBag.Title = "GetBusqueda";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>GetBusqueda</h2>
+
+<div class="container">
+    <div class="row">
+
+
+        @using (Html.BeginForm("GetBusqueda", "LibrosUI", FormMethod.Post))
+        {
+            <div id="formularioBusqueda" class="p-3 mb-2 text-black  border border-dark z-n1 position-absolute p-5 rounded-3" style="background-color:darkgray">
+
+                <div class="row justify-content-center align-items-end border border-white g-3 flex-wrap text-center">
+                    
+
+                    <div class="col-2">
+                        @Html.LabelFor(model => model.Titulo, "Apellido Materno", new { @class = "form-label" })
+                        @Html.TextBoxFor(model => model.Titulo, new { @class = "form-control  " })
+                        <p></p>
+                    </div>
+
+                    <div class="col-2">
+
+
+                        <div class="col-2">
+                            @Html.LabelFor(model => model.Autor.IdAutor, "Actor", new { @class = "form-label" })
+                            @Html.TextBoxFor(model => model.Autor.Nombre, new { @class = "form-control  " })
+                            <p></p>
+                        </div>
+                        }
+
+
+                    </div>
+
+                    <div class="col-2 container">
+                        <button id="BotonBuscar" type="submit" class="btn btn-warning ">
+                            <i class="bi bi-table "> Buscar </i>
+                        </button>
+                        <p></p>
+                    </div>
+
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+</div>
+

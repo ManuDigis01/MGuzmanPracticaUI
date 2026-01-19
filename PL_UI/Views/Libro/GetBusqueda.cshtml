@@ -1,0 +1,110 @@
+﻿@model ML.Libro
+@{
+    ViewBag.Title = "GetBusqueda";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>GetBusqueda</h2>
+
+<div class="container">
+    <div class="row">
+
+
+        <div class="container">
+            <div class="row">
+                <div class="table-responsive col-12">
+                    <table class="table table-bordered border border-white table table-striped " align="left">
+                        <thead>
+                            <tr>
+                               
+                                <th class="cuadro" style="background-color: #07546E ">Titulo</th>
+                                <th class="cuadro" style="background-color: #07546E ">Fecha de Publicacion</th>
+
+                                <th class="cuadro" style="background-color: #07546E ">Editar</th>
+                                <th class="cuadro" style="background-color: #07546E ">Eliminar</th>
+
+
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @if (Model.Libros != null && Model.Libros.Count > 0)
+
+                            {
+                                foreach (ML.Libro libro in Model.Libros)
+                                {
+                                    <tr>
+                                        
+                                        <td>@libro.Titulo</td>
+                                        <td>@libro.FechaDePublicacion</td>
+
+                                        <td>
+                                            <a href="@Url.Action("FormLibro","Libro", new { idlibro = libro.IdLibro })" class="btn btn-outline-info">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Action("Delete","Libro", new { Id = libro.IdLibro })" class="btn btn-outline-danger"
+                                               OnClick=" return confirm('¿Estás seguro de que deseas eliminar este usuario?')">
+                                                <i class="bi bi-trash-fill"></i>
+                                            </a>
+
+                                        </td>
+
+
+
+                                    </tr>
+
+                                }
+
+                            }
+                            else
+                            {
+                                <p>No hay Registros</p>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        @using (Html.BeginForm("GetBusqueda", "Libro", FormMethod.Post))
+        {
+            <div class="col-12">
+
+                <div class="col-5">
+                    @Html.LabelFor(model => model.Titulo, new { @class = "form-label " })
+                    @Html.TextBoxFor(model => model.Titulo, new { @class = "form-control " })
+                    <p></p>
+                </div>
+
+                <div class="col-5">
+                    @Html.LabelFor(model => model.Autor.IdAutor, "Autor", new { @class = "form-label" })
+                    @Html.TextBoxFor(model => model.Autor.IdAutor, new { @class = "form-control" })
+                    <p></p>
+                </div>
+
+
+            </div>
+
+            <div class="col-2 container">
+                <button id="BotonBuscar" type="submit" class="btn btn-warning ">
+                    <i class="bi bi-table "> Buscar </i>
+                </button>
+                <p></p>
+            </div>
+        }
+
+
+
+
+
+
+
+
+
+
+        </div>
+
+</div>
